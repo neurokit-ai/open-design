@@ -854,9 +854,14 @@ export async function startServer({ port = 7456 } = {}) {
   }
 
   return new Promise((resolve) => {
-    // Railway requires binding to 0.0.0.0 (not 127.0.0.1) to accept external traffic
-    const host = process.env.RAILWAY_ENVIRONMENT ? '0.0.0.0' : '127.0.0.1';
-    app.listen(port, host, () => resolve(`http://localhost:${port}`));
+    // Cloud platforms (Railway, etc.) require binding to 0.0.0.0 to accept external traffic
+    // They set PORT env var; local dev defaults to 127.0.0.1
+    const isCloud = process.env.PORT && !process.env.OD_LOCAL;
+    const host = isCloud ? '0.0.0.0' : '127.0.0.1';
+    app.listen(port, host, () => {
+      console.log(`[server] listening on ${host}:${port}`);
+      resolve(`http://localhost:${port}`);
+    });
   });
 }
 
