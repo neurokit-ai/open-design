@@ -2,7 +2,7 @@
 import { startServer } from './server.js';
 
 const args = process.argv.slice(2);
-let port = Number(process.env.OD_PORT) || 7456;
+let port = Number(process.env.PORT) || Number(process.env.OD_PORT) || 7456;
 let open = true;
 
 for (let i = 0; i < args.length; i++) {
