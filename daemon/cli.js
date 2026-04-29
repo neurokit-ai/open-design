@@ -26,11 +26,14 @@ Starts a local daemon that:
 startServer({ port }).then(url => {
   console.log(`[od] listening on ${url}`);
   if (open) {
+    // Cloud environments don't have a browser; silently ignore spawn errors
     const opener = process.platform === 'darwin' ? 'open'
       : process.platform === 'win32' ? 'start'
       : 'xdg-open';
     import('node:child_process').then(({ spawn }) => {
-      spawn(opener, [url], { detached: true, stdio: 'ignore' }).unref();
-    });
+      const child = spawn(opener, [url], { detached: true, stdio: 'ignore' });
+      child.on('error', () => {}); // Ignore browser open failures
+      child.unref();
+    }).catch(() => {}); // Ignore import/spawn errors
   }
 });

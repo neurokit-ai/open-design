@@ -8,4 +8,4 @@ cmds = ['npm install', 'npm run build']
 
 [start]
 
-cmd = 'node daemon/cli.js --no-open'
+cmd = 'npm run daemon'
